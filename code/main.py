@@ -22,6 +22,13 @@ class Greet(webapp2.RequestHandler):
         params = {
             'nickname': user.nickname()
         }
+        for owner in DogOwner.query(DogOwner.email == users.get_current_user().email()):
+            params['nickname'] = owner.name
+            template = JINJA_ENVIRONMENT.get_template('owner.html')
+        for walker in DogWalker.query(DogWalker.email == users.get_current_user().email()):
+            params['nickname'] = walker.name
+            template = JINJA_ENVIRONMENT.get_template('walker.html')
+
         self.response.write(template.render(params))
 
 class DogWalker(ndb.Model):
